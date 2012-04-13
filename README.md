@@ -36,7 +36,7 @@ Requirements
 * LaTex - On Mac OSX, I'd recommend using [Basic Tex][2].  It's a very small
   package. You may need to install the `fontspect` package.
 
-* Kindle Previewer (Optional) - This is for compiling the epub file to mobi and
+* [Kindle Previewer][3] (Optional) - This is for compiling the epub file to mobi and
   previewing.
 
 License
@@ -46,3 +46,4 @@ BSD, short and sweet.
 
 [1]: http://johnmacfarlane.net/pandoc/installing.html
 [2]: http://www.tug.org/mactex/2011/morepackages.html
+[3]: http://www.amazon.com/gp/feature.html/?docId=1000765261
