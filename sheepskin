@@ -1,0 +1,133 @@
+#/bin/bash
+#   _____ _                      _____ _    _
+#  / ____| |                    / ____| |  (_)
+# | (___ | |__   ___  ___ _ __ | (___ | | ___ _ __
+#  \___ \| '_ \ / _ \/ _ \ '_ \ \___ \| |/ / | '_ \
+#  ____) | | | |  __/  __/ |_) |____) |   <| | | | |
+# |_____/|_| |_|\___|\___| .__/|_____/|_|\_\_|_| |_|
+#                        | |
+#                        |_|
+# SheepSkin
+# Copyright (c) 2012 Honza Pokorny
+# All rights reserved
+# Freely available under the BSD license.
+# More: https://github.com/honza/sheepskin
+
+echo 'Title: '
+read TITLE
+
+echo 'Author: '
+read AUTHOR
+
+CWD=`pwd`
+
+mkdir $CWD/templates
+mkdir $CWD/src
+
+echo "% $TITLE
+% $AUTHOR
+" > $CWD/templates/title.txt
+
+echo 'Title
+=====
+
+Paragraph text
+' > $CWD/src/chapter-01.md
+
+echo '\documentclass$if(fontsize)$[$fontsize$]$endif${article}
+\usepackage{fontspec}
+\setmainfont [Ligatures={Common,TeX}, Numbers={OldStyle}]{Baskerville}
+
+$for(header-includes)$
+    $header-includes$
+$endfor$
+
+$if(title)$
+    \title{$title$}
+$endif$
+
+\date{}
+
+$if(author)$
+\author{$author$}
+$endif$
+
+\begin{document}
+
+$if(title)$
+    \maketitle
+    \clearpage
+$endif$
+
+$for(include-before)$
+    $include-before$
+$endfor$
+
+$if(toc)$
+    \tableofcontents
+    \clearpage
+$endif$
+
+$body$
+
+$for(include-after)$
+    $include-after$
+$endfor$
+
+\end{document}' > $CWD/templates/latex.tex
+
+echo 'body {
+    font-family: 'Georgia', serif;
+    width: 470px;
+    margin: 0 auto;
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Baskerville', 'Bitstream Charter', 'Georgia', serif;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    text-decoration: none;
+    color: #333;
+}
+
+p {
+    font-size: 16px;
+    line-height: 140%;
+}' > $CWD/templates/style.css
+
+echo 'BUILD_DIR = _build
+SRC_DIR = src
+
+WEB_BUILD = $(BUILD_DIR)/web
+LATEX_BUILD = $(BUILD_DIR)/latex
+EPUB_BUILD = $(BUILD_DIR)/epub
+
+ARGS = $(shell ls -1 $(SRC_DIR) | sed -e "s/^/$(SRC_DIR)\//")
+
+all:
+	# Make options: latex, web, epub, clean
+
+latex:
+	mkdir -p $(LATEX_BUILD)
+	pandoc -sS --toc --variable=fontsize:12pt --template=templates/latex.tex -o $(LATEX_BUILD)/index.tex templates/title.txt \
+		$(ARGS)
+	xelatex $(LATEX_BUILD)/index.tex
+
+web:
+	mkdir -p $(WEB_BUILD)
+	pandoc -sS --toc --css=style.css -o $(WEB_BUILD)/index.html --chapters templates/title.txt \
+		$(ARGS)
+	cp templates/style.css $(WEB_BUILD)/style.css
+
+epub:
+	mkdir -p $(EPUB_BUILD)
+	pandoc -sS -o $(EPUB_BUILD)/index.epub --chapters templates/title.txt \
+		$(ARGS)
+
+clean:
+	rm -rf $(BUILD_DIR)
+	rm *.log *.aux *.toc *.pdf' > $CWD/Makefile
+
+# vim: ft=sh
