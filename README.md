@@ -31,18 +31,13 @@ Usage
 Requirements
 ------------
 
-* Pandoc
+* Pandoc - [Installation instructions][1]
 
-  [Installation instructions][1]
+* LaTex - On Mac OSX, I'd recommend using [Basic Tex][2].  It's a very small
+  package. You may need to install the `fontspect` package.
 
-* LaTex
- 
-  On Mac OSX, I'd recommend using [Basic Tex][2].  It's a very small package.
-  You may need to install the `fontspect` package.
-
-* Kindle Previewer (Optional)
-
-  This is for compiling the epub file to mobi and previewing.
+* Kindle Previewer (Optional) - This is for compiling the epub file to mobi and
+  previewing.
 
 License
 -------
